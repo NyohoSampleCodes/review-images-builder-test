@@ -1,9 +1,27 @@
 module ReVIEW
-  class Compiler
-    definline :char
+  module BuilderOverride
+    Compiler.definline :char
+
+    def inline_char(id)
+      '◆未定義◆'
+    end
   end
 
-  class ReVIEW::HTMLBuilder
+  class Builder
+    prepend BuilderOverride
+  end
+
+  module IndexBuilderOverride
+    def inline_char(id)
+      inline_icon(id)
+    end
+  end
+
+  class IndexBuilder
+    prepend IndexBuilderOverride
+  end
+
+  module HTMLBuilderOverride
     def inline_char(id)
       case id
       when 'foo'
@@ -17,4 +35,9 @@ module ReVIEW
       inline_icon(icon) + inline_strong("#{name}: ")
     end
   end
+
+  class HTMLBuilder
+    prepend HTMLBuilderOverride
+  end
+
 end
